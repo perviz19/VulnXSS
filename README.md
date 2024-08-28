@@ -27,9 +27,8 @@ python Vuln-XSS.py -h
 ## Example
 To run a basic scan, use:
 ```bash
-python Vuln-XSS.py --url http://example.com --payload payloads/best_payload(1500).txt
+python Vuln-XSS.py --url url.txt --threads 10 --payload payloads/best_payload(1500).txt 
 ```
-Replace http://example.com with the URL of the web application you want to test.
 
 ## Contributing
 Contributions are welcome! Please submit a pull request or open an issue if you have suggestions or improvements.
