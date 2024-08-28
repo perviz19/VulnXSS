@@ -1,0 +1,19 @@
+POST /en/pesquisar HTTP/2
+Host: www.macarico.pt
+Cookie: themeswitcher=inactive; skin=green; sitebase_session=eyJpdiI6ImtBcGthTHIxS3RWWlVhMW8xNXMzWEZFNzE3VVNBUkV1ZXBJT0xMTkhJamc9IiwidmFsdWUiOiJNUUYxekpVMTdrb05tNk9lUWZNVEdyN1RXVG8rOHhIXC9yM3RWT0FCcm9wOW1aajJEM1N2RVRCSE81Y1FaU1JwQnZnTmNFMXY3UEt6a1FPdXBHbGtcL2dRPT0iLCJtYWMiOiJhYjNhNWRjN2I1MGY3MTFmMzllNmRlYmMyYzAzMmNhNjY4YTI1NThjMjk1MjFjNDNkMTZkNTA5Y2U3ZWQxM2UxIn0%3D; _ga=GA1.2.1927797408.1724700510; _gid=GA1.2.1130140806.1724700510; _gat=1; _ga_1X55SNWSV5=GS1.2.1724700515.1.1.1724700550.0.0.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 13
+Origin: https://www.macarico.pt
+Referer: https://www.macarico.pt/en/macarico-no-mundo
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+Te: trailers
+
+pesquisa=FUZZ
