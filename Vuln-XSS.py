@@ -48,7 +48,10 @@ def print_banner():
    \ \ / /[  | | |  | | [ `.-. ||______|> `' <    _.____`.  _.____`.  
     \ ' /  | \_/ |, | |  | | | |      _/ /'`\ \_ | \____) || \____) | 
      \_/   '.__.'_/[___][___||__]    |____||____| \______.' \______.' 
-                                                                      V1.0                                                                                                                       
+                                                                      V1.0       
+
+                                                                      
+USE IT ONLY IN LEGAL TARGETS OR WHERE YOU HAVE OBTAINED EXPLICIT PERMISSION.                                                                                                          
 """
     print(banner)
 
@@ -539,4 +542,3 @@ def main():
 if __name__ == "__main__": 
     signal.signal(signal.SIGINT, signal_handler)
     main()
-
