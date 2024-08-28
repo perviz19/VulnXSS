@@ -1,6 +1,9 @@
 # Vuln-XSS
 Vuln-XSS is a tool designed for identifying Cross-Site Scripting (XSS) vulnerabilities in web applications. It helps to automate the testing process by using a variety of XSS payloads to detect potential security issues.
 
+## Disclaimer
+This software is provided "as is" without warranties of any kind. The authors are not responsible for any issues or damages resulting from its use. Use it at your own risk.
+
 ## Features
 Test for XSS vulnerabilities using a range of payloads.
 Support for different browser profiles and user-agents.
