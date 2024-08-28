@@ -9,6 +9,7 @@ This software is provided "as is" and should only be used in compliance with app
 To get started, clone the repository using Git:
 ```bash
 git clone https://github.com/perviz19/VulnXSS.git
+cd VulnXSS
 ```
 ## Install Dependencies
 Navigate to the project directory and install the required Python packages:
