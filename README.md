@@ -9,7 +9,7 @@ Ability to run tests in headless mode for efficiency.
 ## Installation
 To get started, clone the repository using Git:
 ```bash
-    git clone https://github.com/perviz19/VulnXSS.git
+git clone https://github.com/perviz19/VulnXSS.git
 ```
 ## Install Dependencies
 Navigate to the project directory and install the required Python packages:
@@ -22,13 +22,13 @@ pip install -r requirements.txt
 Run the tool with the following command to see the available options:
 
 ```bash
-    python Vuln-XSS.py -h
+python Vuln-XSS.py -h
 ```
 
 ## Example
 To run a basic scan, use:
 ```bash
-    python Vuln-XSS.py --url http://example.com
+python Vuln-XSS.py --url http://example.com
 ```
 Replace http://example.com with the URL of the web application you want to test.
 
