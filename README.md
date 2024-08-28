@@ -36,7 +36,7 @@ Replace http://example.com with the URL of the web application you want to test.
 Contributions are welcome! Please submit a pull request or open an issue if you have suggestions or improvements.
 
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE] file for details.
 
 ## Contact
 For any questions or support, please contact perviz.muslumov10@gmail.com.
