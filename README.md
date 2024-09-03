@@ -37,5 +37,3 @@ Contributions are welcome! Please submit a pull request or open an issue if you 
 ## License
 This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3.0 - see the [LICENSE](LICENSE) file for details.
 
-## Contact
-For any questions or support, please contact perviz.muslumov10@gmail.com.
