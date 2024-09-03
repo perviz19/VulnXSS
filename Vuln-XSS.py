@@ -171,7 +171,6 @@ class XSSScanner:
                     driver.add_cookie({'name': name, 'value': value})
         
         self.lock_alert += 1
-        time.sleep(1)
         driver.set_page_load_timeout(25)
         return driver
 
@@ -205,7 +204,6 @@ class XSSScanner:
             print(f"{Fore.GREEN}Thread {i + 1} is ready")
             driver.set_page_load_timeout(25)
             self.drivers.append(driver)
-            time.sleep(1)
 
     def extract_data_from_request(self):
         with open(self.request_file, 'r') as file:
