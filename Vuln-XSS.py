@@ -172,6 +172,7 @@ class XSSScanner:
         
         self.lock_alert += 1
         driver.set_page_load_timeout(25)
+        time.sleep(1)
         return driver
 
 
