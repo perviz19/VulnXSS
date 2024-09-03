@@ -14,7 +14,7 @@ cd VulnXSS
 ## Install Dependencies
 Navigate to the project directory and install the required Python packages:
 
-```python
+```bash
 pip install -r requirements.txt
 ```
 
