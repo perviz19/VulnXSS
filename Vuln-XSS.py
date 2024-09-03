@@ -147,7 +147,8 @@ class XSSScanner:
             pass
         else:
             chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--log-level=4")
+        chrome_options.add_argument("--log-level=3")
+        chrome_options.add_argument("--disable-logging")
         chrome_options.page_load_strategy = 'eager'
         service = Service(executable_path=self.driver_path)
 
@@ -182,7 +183,8 @@ class XSSScanner:
             pass
         else:
             chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--log-level=4")
+        chrome_options.add_argument("--log-level=3")
+        chrome_options.add_argument("--disable-logging")
         chrome_options.page_load_strategy = 'eager'
 
         if self.random_agent:
