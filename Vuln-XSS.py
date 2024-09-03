@@ -48,7 +48,7 @@ def print_banner():
    \ \ / /[  | | |  | | [ `.-. ||______|> `' <    _.____`.  _.____`.  
     \ ' /  | \_/ |, | |  | | | |      _/ /'`\ \_ | \____) || \____) | 
      \_/   '.__.'_/[___][___||__]    |____||____| \______.' \______.' 
-                                                                      V1.0       
+                                                                      V1.1       
 
                                                                       
 USE IT ONLY IN LEGAL TARGETS OR WHERE YOU HAVE OBTAINED EXPLICIT PERMISSION.                                                                                                          
@@ -63,29 +63,6 @@ def signal_handler(sig, frame):
         sys.exit(0)
     except:
         pass
-
-
-def sanitize_filename(url):
-    return re.sub(r'[<>:"/\\|?*\x00-\x1F]', '_', url)
-
-def get_site_name(self):
-    if self.url:
-        return self.url
-
-    if self.post_url:
-        return self.post_url
-
-    if self.request_file:
-        with open(self.request_file, 'r', encoding='utf-8') as file:
-            request_lines = file.readlines()
-            
-            for line in request_lines:
-                if line.startswith("Referer:"):
-                    self.post_url = line.split("Referer:")[1].strip()
-                    return self.post_url
-
-            raise ValueError("The request file must contain 'Referer'.")
-
 
 
 def get_installed_chrome_version():
@@ -139,16 +116,16 @@ def get_chromedriver_version(driver_path):
         return None
 
 
-
 class XSSScanner:
-    def __init__(self, url, request_file, payload_file, threads_count, wait_time, random_agent):
+    def __init__(self, url, request_file, payload_file, threads_count, wait_time, random_agent, show_browser):
         self.url = url
         self.request_file = request_file
         self.payload_file = payload_file
         self.threads_count = threads_count
         self.wait_time = wait_time
         self.random_agent = random_agent
-        self.found_payloads = []
+        self.show_browser = show_browser
+        self.found_payloads = 0
         self.tested_payloads_count = 0
         self.total_payloads = 0
         self.lock = threading.Lock()
@@ -157,31 +134,54 @@ class XSSScanner:
         self.body_template = ''
         self.headers = {}
         self.input_names = []
-        self.post_url = None
         self.action_url = None  # Add this line for action URL
         self.fuzz_names = []
         self.driver_path = None
-
-
-        if not os.path.exists('logs'):
-            os.makedirs('logs')
-
-        site_name = urlparse(get_site_name(self)).netloc
-        current_time = time.strftime("%Y-%m-%d__%H-%M")
+        self.lock_alert = 0
         
+    
+    def driver_restart(self):
+        chrome_options = Options()
+        if self.show_browser:
+            pass
+        else:
+            chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--log-level=4")
+        chrome_options.page_load_strategy = 'eager'
+        service = Service(executable_path=self.driver_path)
 
-        self.log_filename = f"logs/{site_name}_{current_time}.txt"
+        if self.random_agent:
+            user_agent = random.choice(user_agents)
+            print(f"{Fore.YELLOW}User-agent: {user_agent}")
+            chrome_options.add_argument(f"user-agent={user_agent}")
+        
+        # Create a new WebDriver instance
+        driver = webdriver.Chrome(service=service, options=chrome_options, service_log_path='NUL')
+        
+        # Open the URL to be able to add cookies
+        driver.get(self.url)
+        
+        # Add cookies to the driver
+        for name, value in self.cookies.items():
+            # Only add cookie if it does not already exist
+            existing_cookies = driver.get_cookies()
+            if not any(cookie['name'] == name for cookie in existing_cookies):
+                driver.add_cookie({'name': name, 'value': value})
+        
+        self.lock_alert += 1
+        time.sleep(1)
+        driver.set_page_load_timeout(25)
+        return driver
 
-        if self.request_file:
-            self.extract_data_from_request()
 
     def initialize_drivers(self):
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--log-level=4")    
-        chrome_options.add_argument("--disable-notifications")
-        chrome_options.add_argument("--ignore-certificate-errors")
-        service = Service(executable_path=self.driver_path, log_path='NUL')
+        if self.show_browser:
+            pass
+        else:
+            chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--log-level=4")
+        chrome_options.page_load_strategy = 'eager'
 
         if self.random_agent:
             user_agent = random.choice(user_agents)
@@ -189,8 +189,19 @@ class XSSScanner:
             chrome_options.add_argument(f"user-agent={user_agent}")
 
         for i in range(self.threads_count):
-            driver = webdriver.Chrome(service=service ,options=chrome_options)
+            service = Service(executable_path=self.driver_path)
+            driver = webdriver.Chrome(service=service, options=chrome_options, service_log_path='NUL')
+            driver.get(self.url)  # Open the URL to add cookies to the domain
+
+            # Add cookies to the driver
+            for name, value in self.cookies.items():
+                # Only add cookie if it does not already exist
+                existing_cookies = driver.get_cookies()
+                if not any(cookie['name'] == name for cookie in existing_cookies):
+                    driver.add_cookie({'name': name, 'value': value})
+    
             print(f"{Fore.GREEN}Thread {i + 1} is ready")
+            driver.set_page_load_timeout(25)
             self.drivers.append(driver)
             time.sleep(1)
 
@@ -200,6 +211,7 @@ class XSSScanner:
 
         url = None
         self.form_data = {}  # Initialize form_data dictionary
+        self.cookies = {}  # Initialize cookies dictionary
         self.action_url = None  # Initialize action_url
         
         for line in lines:
@@ -208,8 +220,16 @@ class XSSScanner:
             elif line.startswith("POST"):
                 # Extract action URL from POST request line
                 self.action_url = line.split()[1].strip()
+            elif line.startswith("Cookie:"):
+                # Extract cookies from Cookie header
+                cookie_string = line[len("Cookie:"):].strip()
+                cookie_pairs = cookie_string.split('; ')
+                for pair in cookie_pairs:
+                    if '=' in pair:
+                        key, value = pair.split('=', 1)
+                        self.cookies[key] = value
             elif ':' in line:
-                continue  # Skip headers
+                continue  # Skip other headers
             elif '=' in line:
                 key_value_pairs = line.strip().split('&')
                 for pair in key_value_pairs:
@@ -222,6 +242,7 @@ class XSSScanner:
         self.url = url  # Set the URL extracted from request file
         print(f"{Fore.YELLOW}\nForm Data: {self.form_data}")
         print(f"FUZZ names: {self.fuzz_names}")
+        print(f"Cookies: {self.cookies}")  # Print extracted cookies
 
 
     def fill_form_and_submit(self, payload, driver):
@@ -238,7 +259,9 @@ class XSSScanner:
                 if self.action_url in action:
                     target_form = form
                     break
-            
+                elif action =='':
+                    target_form = form
+
             if target_form is None:
                 print(f"{Fore.RED}No form found with action URL: {self.action_url}")
                 return
@@ -263,57 +286,14 @@ class XSSScanner:
                     value = self.form_data[input_name]
                     driver.execute_script("arguments[0].value = arguments[1];", textarea_element, value)
             
-            driver.execute_script("arguments[0].submit();", target_form)        
+            try: 
+                submit_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit']")
+                submit_button.click()
+            except:
+                driver.execute_script("arguments[0].submit();", target_form)        
         
         except Exception as e:
-            print(f"{Fore.RED}Unexpected error: {e}")
-
-
-
-    def test_get_request(self, payloads, driver):
-        for payload in payloads:
-            if driver.service.is_connectable():
-                pass
-            else:
-                sys.exit(0)
-  
-
-            try:
-                test_url = self.url.replace('FUZZ', payload.strip())
-                driver.get(test_url)
-                
-                try:
-                    # Wait for the alert to appear
-                    WebDriverWait(driver, self.wait_time).until(EC.alert_is_present())
-                    alert = driver.switch_to.alert
-                    print(f"{Fore.GREEN}{Style.BRIGHT}XSS found! Payload: {payload.strip()}")
-                    
-                    with self.lock:
-                        self.found_payloads.append(payload.strip())
-                        
-                        # Write found payload to log file immediately
-                        with open(self.log_filename, 'a', encoding='utf-8') as log_file:
-                            log_file.write(f"{test_url}\n")
-
-                    while True:
-                        try:
-                            WebDriverWait(driver, 1).until(EC.alert_is_present())
-                            alert.accept()
-                        except NoAlertPresentException:
-                            break  
-
-                except UnexpectedAlertPresentException:
-                    print(f"{Fore.RED}Unexpected error: {e}")
-
-                
-                with self.lock:
-                    self.tested_payloads_count += 1
-                    
-
-            except Exception as e:
-                with self.lock:
-                    self.tested_payloads_count += 1
-                print(f"{Fore.RED}XSS not found: {payload.strip()}")
+            print(f"{Fore.RED}Unexpected error when fill the form: {e}")
 
 
     def test_post_request(self, payloads, driver):
@@ -324,7 +304,7 @@ class XSSScanner:
                 sys.exit(0)
             
             try:
-                driver.get(self.post_url)
+                driver.get(self.url)
                 try:
                     self.fill_form_and_submit(payload, driver)
                     WebDriverWait(driver, self.wait_time).until(EC.alert_is_present())
@@ -332,32 +312,99 @@ class XSSScanner:
                     print(f"{Fore.GREEN}{Style.BRIGHT}XSS found! Payload: {payload.strip()}")
 
                     with self.lock:
-                        self.found_payloads.append(payload.strip())
+                        self.found_payloads += 1
+
                         with open(self.log_filename, 'a', encoding='utf-8') as log_file:
                             log_file.write(f"{payload.strip()}\n")
 
+                    i = 0
                     while True:
-                        try:
-                            WebDriverWait(driver, 1).until(EC.alert_is_present())
-                            alert.accept()
-                        except NoAlertPresentException:
-                            break  
+                        if i == 7:
+                            print(f"{Fore.YELLOW}{Style.BRIGHT}Driver stuck, restarting driver.")
+                            driver.quit()
+                            driver = self.driver_restart()
+                            break
+                        else:
+                            try:
+                                alert.accept()
+                                i = i + 1
+                            except NoAlertPresentException:
+                                break   
 
-                except UnexpectedAlertPresentException:
-                    print(f"{Fore.RED}Unexpected error: {e}")
-            
-                with self.lock:
-                        self.tested_payloads_count += 1
+                except UnexpectedAlertPresentException as a:
+                    print(f"{Fore.RED} {type(a).__name__}: {str(a)}")
+
                     
-            except Exception as e:
+                with self.lock:
+                    self.tested_payloads_count += 1
+                        
+            except Exception :
                 with self.lock:
                     self.tested_payloads_count += 1
                 print(f"{Fore.RED}XSS not found: {payload.strip()}")
+
+        driver.quit()
+
+
+
+    def test_get_request(self, payloads, driver):
+        for payload in payloads:
+            if driver.service.is_connectable():
+                pass
+            else:
+                break
+
+            try:
+                test_url = self.url.replace('FUZZ', payload.strip())
+                driver.get(test_url)
+    
+                try:
+                    # Wait for the alert to appear
+                    WebDriverWait(driver, self.wait_time).until(EC.alert_is_present())
+                    alert = driver.switch_to.alert
+                    print(f"{Fore.GREEN}{Style.BRIGHT}XSS found! Payload: {payload.strip()}")
+                    
+                    with self.lock:
+                        self.found_payloads += 1
+                        
+                        # Write found payload to log file immediately
+                        with open(self.log_filename, 'a', encoding='utf-8') as log_file:
+                            log_file.write(f"{test_url}\n")
+                    
+                    i = 0
+                    while True:
+                        if i == 7:
+                            print(f"{Fore.YELLOW}{Style.BRIGHT}Driver stuck, restarting driver.")
+                            driver.quit()
+                            driver = self.driver_restart()
+                            break
+                        else:
+                            try:
+                                alert.accept()
+                                i = i + 1
+                            except NoAlertPresentException:
+                                break  
+
+                except UnexpectedAlertPresentException as a:
+                    print(f"{Fore.RED} {type(a).__name__}: {str(a)}")
+
+                    
+                with self.lock:
+                    self.tested_payloads_count += 1
+                        
+
+            except Exception :
+                with self.lock:
+                    self.tested_payloads_count += 1
+                print(f"{Fore.RED}XSS not found: {payload.strip()}")
+
+        driver.quit()
             
 
     def choose_request_methode(self):
                 
-        if self.post_url:
+        if self.request_file:
+            self.extract_data_from_request()
             return "post"
                     
         elif self.url:
@@ -367,6 +414,16 @@ class XSSScanner:
         test_duration = end_time - start_time
         minutes, seconds = divmod(int(test_duration), 60)
         print(f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Total payload test duration: {minutes}m {seconds}s")
+
+
+    def log_file(self):
+        if not os.path.exists('logs'):
+            os.makedirs('logs')
+
+        site_name = urlparse(self.url).netloc
+        current_time = time.strftime("%Y-%m-%d__%H-%M")
+        
+        self.log_filename = f"logs/{site_name}_{current_time}.log"
 
 
     def start_scanning(self):
@@ -396,10 +453,14 @@ class XSSScanner:
             else:
                 break
         
-        self.initialize_drivers()
-
-        start_time = time.time()
         method = self.choose_request_methode()
+        self.log_file()
+
+        self.initialize_drivers()
+        start_time = time.time()
+
+        self.progress_thread = threading.Thread(target=self.print_progress)
+        self.progress_thread.start()
 
         if self.threads_count > 1:
             threads = []
@@ -421,45 +482,40 @@ class XSSScanner:
             except:
                 pass
 
-            self.progress_thread = threading.Thread(target=self.print_progress)
-            self.progress_thread.start()
-
             for thread in threads:
                 thread.join()
-
-            stop_event.set()
-            self.progress_thread.join()
-
+            
         else:
             if method=="post":
                 self.test_post_request(payloads, self.drivers[0])
             elif method == "get":
                 self.test_get_request(payloads, self.drivers[0])
 
+        stop_event.set()
+        self.progress_thread.join
         end_time = time.time()
 
         if self.found_payloads:
-            print(f"{Fore.MAGENTA}{Style.BRIGHT}\n\nXSS Payloads found:{len(self.found_payloads)}\n")
-            for payload in self.found_payloads:
-                print(f"{Fore.GREEN}{Style.BRIGHT}{payload}")
-            print(f"{Fore.MAGENTA}{Style.BRIGHT}All correct payloads have been saved to the ./logs directory.")
+            print(f"{Fore.CYAN}{Style.BRIGHT}\n\nXSS Payloads found:{self.found_payloads}\n")
+            print(f"{Fore.CYAN}{Style.BRIGHT}All correct payloads have been saved to the ./{self.log_filename} file.")
         else:
-            print(f"{Fore.YELLOW}{Style.BRIGHT}XSS not found.")
+            print(f"{Fore.RED}{Style.BRIGHT}XSS not found.")
         self.print_test_duration(start_time, end_time)
+        print(f"{Fore.CYAN}{Style.BRIGHT}Total alert lock: {self.lock_alert}")
 
+        sys.exit(1)
 
     def print_progress(self):
         while not stop_event.is_set():
             with self.lock:
                 print(f"{Fore.BLUE}{Style.BRIGHT}Tested payloads: {self.tested_payloads_count}/{self.total_payloads} ({round(self.tested_payloads_count / self.total_payloads * 100, 1)}%)")
-            time.sleep(15)
+            time.sleep(20)
+        
 
 
 def print_custom_help():
     help_text = f"""{Fore.CYAN}{Style.BRIGHT}
 XSS Checker - This tool scans a URL or request file for XSS vulnerabilities.
-
-usage: python xss-scanner.py [-h] [--url 'url' or url.txt] [--request request.txt] --payload payload.txt [--threads THREADS] [--wait WAIT] [--random-agent]
 
 optional arguments:
   -h, --help         show this help message and exit
@@ -469,6 +525,7 @@ optional arguments:
   --threads THREADS  Number of threads
   --wait WAIT        Wait time for alerts to appear
   --random-agent     Use random user-agent
+  --show-browser     Shows open browsers
 
 Example usage:
   python Vuln-XSS.py --url url.txt --threads 15 --payload './payloads/best_payload(1500).txt'
@@ -480,8 +537,7 @@ def main():
     print_banner()
     parser = argparse.ArgumentParser(
         description="XSS Checker - This tool scans a URL or request file for XSS vulnerabilities.",
-        usage="python xss-scanner.py [-h] [--url 'url' or url.txt] [--request request.txt] --payload payload.txt [--threads THREADS] [--wait WAIT] [--random-agent]",
-        add_help=False  # Disable the default help message
+        usage=f"{Fore.YELLOW}{Style.BRIGHT}python xss-scanner.py [-h] [--url 'url' or url.txt] [--request request.txt] --payload payload.txt [--threads THREADS] [--wait WAIT] [--random-agent] [--show-browser]"
     )
     parser.add_argument("--url", help="Target URL (must contain FUZZ placeholder) or file containing URLs")
     parser.add_argument("--request", help="Request file (HTTP request template)")
@@ -489,6 +545,7 @@ def main():
     parser.add_argument("--threads", type=int, default=1, help="Number of threads")
     parser.add_argument("--wait", type=int, default=2, help="Wait time for alerts to appear")
     parser.add_argument("--random-agent", action='store_true', help="Use random user-agent")
+    parser.add_argument("--show-browser", action='store_true', help="show opening browsers")
 
     if '--help' in sys.argv or '-h' in sys.argv:
         print_custom_help()
@@ -518,7 +575,7 @@ def main():
                 print(f"{Fore.RED}\nError: The URL '{url}' must contain the 'FUZZ' placeholder.")
                 continue
             print(f"{Fore.GREEN}{Style.BRIGHT}\nTesting url is {url}")
-            scanner = XSSScanner(url, args.request, args.payload, args.threads, args.wait, args.random_agent)
+            scanner = XSSScanner(url, args.request, args.payload, args.threads, args.wait, args.random_agent, args.show_browser)
             scanner.start_scanning()
 
     elif args.request:
@@ -532,13 +589,13 @@ def main():
                 print(f"{Fore.RED}\nError: The request file must contain the 'FUZZ' placeholder.")
                 sys.exit(1)
 
-        scanner = XSSScanner(None, args.request, args.payload, args.threads, args.wait, args.random_agent)
+        scanner = XSSScanner(None, args.request, args.payload, args.threads, args.wait, args.random_agent, args.show_browser)
         scanner.start_scanning()
 
     if not os.path.exists(args.payload):
         print(f"{Fore.RED}\nError: Payload file does not exist.")
         sys.exit(1)
 
-if __name__ == "__main__": 
+if __name__ == "__main__":     
     signal.signal(signal.SIGINT, signal_handler)
     main()
