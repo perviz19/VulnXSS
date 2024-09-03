@@ -118,7 +118,7 @@ def get_chromedriver_version(driver_path):
 
 
 class XSSScanner:
-    def __init__(self, url, request_file, payload_file, threads_count, wait_time, random_agent, show_browser):
+    def __init__(self, url, request_file, payload_file, threads_count, wait_time, random_agent, show_browser, cookies):
         self.url = url
         self.request_file = request_file
         self.payload_file = payload_file
@@ -139,7 +139,7 @@ class XSSScanner:
         self.fuzz_names = []
         self.driver_path = None
         self.lock_alert = 0
-        self.cookies = {}
+        self.cookies = cookies
     
     def driver_restart(self):
         chrome_options = Options()
@@ -208,11 +208,22 @@ class XSSScanner:
             driver.set_page_load_timeout(25)
             self.drivers.append(driver)
 
+
+    def cookie_finder(self):
+        cookie_pairs = self.cookies.split('; ')
+        self.cookies = {}
+        for pair in cookie_pairs:
+            if '=' in pair:
+                key, value = pair.split('=', 1)
+                self.cookies[key] = value       
+
+
     def extract_data_from_request(self):
         with open(self.request_file, 'r') as file:
             lines = file.readlines()
 
         url = None
+        self.cookies = {}
         self.form_data = {}  # Initialize form_data dictionary
         self.action_url = None  # Initialize action_url
         
@@ -410,6 +421,8 @@ class XSSScanner:
             return "post"
                     
         elif self.url:
+            if self.cookies:
+                self.cookie_finder()
             return "get"  
 
     def print_test_duration(self, start_time, end_time):
@@ -432,7 +445,6 @@ class XSSScanner:
         with open(self.payload_file, 'r', encoding='utf-8') as file:
             payloads = file.readlines()
             self.total_payloads = len(payloads)
-
 
         chrome_version = get_installed_chrome_version()
 
@@ -528,7 +540,8 @@ optional arguments:
   --wait WAIT        Wait time for alerts to appear
   --random-agent     Use random user-agent
   --show-browser     Shows open browsers
-
+  --cookies          Add cookies
+  
 Example usage:
   python Vuln-XSS.py --url url.txt --threads 15 --payload './payloads/best_payload(1500).txt'
   python Vuln-XSS.py --request request.txt --threads 15 --payload './payloads/best_payload(1500).txt'
@@ -548,6 +561,7 @@ def main():
     parser.add_argument("--wait", type=int, default=2, help="Wait time for alerts to appear")
     parser.add_argument("--random-agent", action='store_true', help="Use random user-agent")
     parser.add_argument("--show-browser", action='store_true', help="show opening browsers")
+    parser.add_argument("--cookies", help="Add cookies")
 
     if '--help' in sys.argv or '-h' in sys.argv:
         print_custom_help()
@@ -577,7 +591,7 @@ def main():
                 print(f"{Fore.RED}\nError: The URL '{url}' must contain the 'FUZZ' placeholder.")
                 continue
             print(f"{Fore.GREEN}{Style.BRIGHT}\nTesting url is {url}")
-            scanner = XSSScanner(url, args.request, args.payload, args.threads, args.wait, args.random_agent, args.show_browser)
+            scanner = XSSScanner(url, args.request, args.payload, args.threads, args.wait, args.random_agent, args.show_browser, args.cookies)
             scanner.start_scanning()
 
     elif args.request:
@@ -591,7 +605,7 @@ def main():
                 print(f"{Fore.RED}\nError: The request file must contain the 'FUZZ' placeholder.")
                 sys.exit(1)
 
-        scanner = XSSScanner(None, args.request, args.payload, args.threads, args.wait, args.random_agent, args.show_browser)
+        scanner = XSSScanner(None, args.request, args.payload, args.threads, args.wait, args.random_agent, args.show_browser, None)
         scanner.start_scanning()
 
     if not os.path.exists(args.payload):
