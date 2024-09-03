@@ -4,6 +4,8 @@ Vuln-XSS is a tool designed for identifying Cross-Site Scripting (XSS) vulnerabi
 ## Disclaimer
 This software is provided "as is" and should only be used in compliance with applicable laws and regulations. The authors are not responsible for any misuse or legal consequences resulting from its use. Use it responsibly and at your own risk.
 
+## Platform
+WINDOWS
 
 ## Installation
 To get started, clone the repository using Git:
