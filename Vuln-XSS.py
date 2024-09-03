@@ -48,7 +48,7 @@ def print_banner():
    \ \ / /[  | | |  | | [ `.-. ||______|> `' <    _.____`.  _.____`.  
     \ ' /  | \_/ |, | |  | | | |      _/ /'`\ \_ | \____) || \____) | 
      \_/   '.__.'_/[___][___||__]    |____||____| \______.' \______.' 
-                                                                      V1.1       
+                                                                      V1.0       
 
                                                                       
 USE IT ONLY IN LEGAL TARGETS OR WHERE YOU HAVE OBTAINED EXPLICIT PERMISSION.                                                                                                          
@@ -116,6 +116,7 @@ def get_chromedriver_version(driver_path):
         return None
 
 
+
 class XSSScanner:
     def __init__(self, url, request_file, payload_file, threads_count, wait_time, random_agent, show_browser):
         self.url = url
@@ -138,7 +139,7 @@ class XSSScanner:
         self.fuzz_names = []
         self.driver_path = None
         self.lock_alert = 0
-        
+        self.cookies = {}
     
     def driver_restart(self):
         chrome_options = Options()
@@ -162,11 +163,12 @@ class XSSScanner:
         driver.get(self.url)
         
         # Add cookies to the driver
-        for name, value in self.cookies.items():
+        if self.cookies:
+            for name, value in self.cookies.items():
             # Only add cookie if it does not already exist
-            existing_cookies = driver.get_cookies()
-            if not any(cookie['name'] == name for cookie in existing_cookies):
-                driver.add_cookie({'name': name, 'value': value})
+                existing_cookies = driver.get_cookies()
+                if not any(cookie['name'] == name for cookie in existing_cookies):
+                    driver.add_cookie({'name': name, 'value': value})
         
         self.lock_alert += 1
         time.sleep(1)
@@ -193,12 +195,12 @@ class XSSScanner:
             driver = webdriver.Chrome(service=service, options=chrome_options, service_log_path='NUL')
             driver.get(self.url)  # Open the URL to add cookies to the domain
 
-            # Add cookies to the driver
-            for name, value in self.cookies.items():
-                # Only add cookie if it does not already exist
-                existing_cookies = driver.get_cookies()
-                if not any(cookie['name'] == name for cookie in existing_cookies):
-                    driver.add_cookie({'name': name, 'value': value})
+            if self.cookies:
+                for name, value in self.cookies.items():
+                    # Only add cookie if it does not already exist
+                    existing_cookies = driver.get_cookies()
+                    if not any(cookie['name'] == name for cookie in existing_cookies):
+                        driver.add_cookie({'name': name, 'value': value})
     
             print(f"{Fore.GREEN}Thread {i + 1} is ready")
             driver.set_page_load_timeout(25)
@@ -211,7 +213,6 @@ class XSSScanner:
 
         url = None
         self.form_data = {}  # Initialize form_data dictionary
-        self.cookies = {}  # Initialize cookies dictionary
         self.action_url = None  # Initialize action_url
         
         for line in lines:
@@ -599,3 +600,4 @@ def main():
 if __name__ == "__main__":     
     signal.signal(signal.SIGINT, signal_handler)
     main()
+
