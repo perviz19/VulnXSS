@@ -204,6 +204,7 @@ class XSSScanner:
             if self.random_agent:
                 user_agent = random.choice(user_agents)
                 chrome_options.add_argument(f"user-agent={user_agent}")
+                print(f"{Fore.YELLOW}{Style.BRIGHT}User-agent: {user_agent}")
             service = Service(executable_path=self.driver_path)
             driver = webdriver.Chrome(service=service, options=chrome_options, service_log_path='NUL')
             driver.get(self.url)  # Open the URL to add cookies to the domain
@@ -215,7 +216,7 @@ class XSSScanner:
                     if not any(cookie['name'] == name for cookie in existing_cookies):
                         driver.add_cookie({'name': name, 'value': value})
 
-            print(f"{Fore.YELLOW}{Style.BRIGHT}User-agent: {user_agent}")
+
             print(f"{Fore.GREEN}{Style.BRIGHT}Thread {i + 1} is ready")
             driver.set_page_load_timeout(25)
             self.drivers.append(driver)
