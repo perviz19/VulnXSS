@@ -61,7 +61,7 @@ def print_banner():
    \\ \\ / /[  | | |  | | [ `.-. ||______|> `' <    _.____`.  _.____`.  
     \\ ' /  | \\_/ |, | |  | | | |      _/ /'`\\ \\_ | \\____) || \\____) | 
      \\_/   '.__.'_/[___][___||__]    |____||____| \\______.' \\______.' 
-                                                                      V1.0       
+                                                                      V1.1       
 
                                                                       
 USE IT ONLY IN LEGAL TARGETS OR WHERE YOU HAVE OBTAINED EXPLICIT PERMISSION.                                                                                                          
