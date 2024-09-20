@@ -56,11 +56,11 @@ def print_banner():
     banner=f"""{Style.BRIGHT}{Fore.RED}
 
  ____   ____        __                ____  ____   ______    ______   
-|_  _| |_  _|      [  |              |_  _||_  _|.' ____ \ .' ____ \  
-  \ \   / /__   _   | |  _ .--.  ______\ \  / /  | (___ \_|| (___ \_| 
-   \ \ / /[  | | |  | | [ `.-. ||______|> `' <    _.____`.  _.____`.  
-    \ ' /  | \_/ |, | |  | | | |      _/ /'`\ \_ | \____) || \____) | 
-     \_/   '.__.'_/[___][___||__]    |____||____| \______.' \______.' 
+|_  _| |_  _|      [  |              |_  _||_  _|.' ____ \\ .' ____ \\  
+  \\ \\   / /__   _   | |  _ .--.  ______\\ \\  / /  | (___ \\_|| (___ \\_| 
+   \\ \\ / /[  | | |  | | [ `.-. ||______|> `' <    _.____`.  _.____`.  
+    \\ ' /  | \\_/ |, | |  | | | |      _/ /'`\\ \\_ | \\____) || \\____) | 
+     \\_/   '.__.'_/[___][___||__]    |____||____| \\______.' \\______.' 
                                                                       V1.0       
 
                                                                       
@@ -80,17 +80,17 @@ def signal_handler(sig, frame):
 
 def get_installed_chrome_version():
     try:
-        key = reg.OpenKey(reg.HKEY_CURRENT_USER, r"Software\Google\Chrome\BLBeacon")
+        key = reg.OpenKey(reg.HKEY_CURRENT_USER, r"Software\\Google\\Chrome\\BLBeacon")
         version, _ = reg.QueryValueEx(key, "version")
         return version
     except FileNotFoundError:
         try:
-            key = reg.OpenKey(reg.HKEY_LOCAL_MACHINE, r"Software\Google\Chrome\BLBeacon")
+            key = reg.OpenKey(reg.HKEY_LOCAL_MACHINE, r"Software\\Google\\Chrome\\BLBeacon")
             version, _ = reg.QueryValueEx(key, "version")
             return version
         except FileNotFoundError:
             try:
-                key = reg.OpenKey(reg.HKEY_LOCAL_MACHINE, r"Software\WOW6432Node\Google\Chrome\BLBeacon")
+                key = reg.OpenKey(reg.HKEY_LOCAL_MACHINE, r"Software\\WOW6432Node\\Google\\Chrome\\BLBeacon")
                 version, _ = reg.QueryValueEx(key, "version")
                 return version
             except FileNotFoundError:
@@ -159,7 +159,7 @@ class XSSScanner:
         if self.show_browser:
             pass
         else:
-            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--log-level=3")
         chrome_options.add_argument("--disable-logging")
         chrome_options.page_load_strategy = 'eager'
@@ -171,7 +171,7 @@ class XSSScanner:
             chrome_options.add_argument(f"user-agent={user_agent}")
         
         # Create a new WebDriver instance
-        driver = webdriver.Chrome(service=service, options=chrome_options, service_log_path='NUL')
+        driver = webdriver.Chrome(service=service, options=chrome_options)
         
         # Open the URL to be able to add cookies
         driver.get(self.url)
@@ -195,7 +195,7 @@ class XSSScanner:
         if self.show_browser:
             pass
         else:
-            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--log-level=3")
         chrome_options.add_argument("--disable-logging")
         chrome_options.page_load_strategy = 'eager'
@@ -205,8 +205,8 @@ class XSSScanner:
                 user_agent = random.choice(user_agents)
                 chrome_options.add_argument(f"user-agent={user_agent}")
                 print(f"{Fore.YELLOW}{Style.BRIGHT}User-agent: {user_agent}")
-            service = Service(executable_path=self.driver_path)
-            driver = webdriver.Chrome(service=service, options=chrome_options, service_log_path='NUL')
+            service = Service(executable_path=self.driver_path, log_path='NUL')
+            driver = webdriver.Chrome(service=service, options=chrome_options)
             driver.get(self.url)  # Open the URL to add cookies to the domain
 
             if self.cookies:
